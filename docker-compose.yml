@@ -3,6 +3,7 @@ services:
   fhem:
     image: fhem/fhem:latest
     restart: always
+    privileged: true
     ports:
       - "8082:8083"
     volumes:
