@@ -8,7 +8,7 @@ services:
     volumes:
       - ./fhem:/opt/fhem
   fhem_ngrok:
-    image: wernight/ngrok
+    image: wernight/ngrok:${NGROK_DOCKER_IMAGE_TAG:-armhf}
     environment:
       NGROK_PORT: "fhem:8083"
       NGROK_BINDTLS: "true"
@@ -39,7 +39,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
   grafana_ngrok:
-    image: wernight/ngrok
+    image: wernight/ngrok:${NGROK_DOCKER_IMAGE_TAG:-armhf}
     environment:
       NGROK_PORT: "grafana:3000"
       NGROK_BINDTLS: "true"
