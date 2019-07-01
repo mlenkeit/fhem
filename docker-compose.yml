@@ -6,7 +6,7 @@ services:
     ports:
       - "8082:8083"
     volumes:
-      - ./fhem:/opt/fhem
+      - fhem_data:/opt/fhem
   fhem_ngrok:
     image: wernight/ngrok:${NGROK_DOCKER_IMAGE_TAG:-armhf}
     environment:
@@ -48,3 +48,4 @@ services:
 volumes:
   influxdb_data:
   grafana_data:
+  fhem_data:
