@@ -1,0 +1,52 @@
+version: '3'
+services:
+  fhem:
+    image: fhem/fhem:latest
+    restart: always
+    ports:
+      - "8082:8083"
+    volumes:
+      - ./fhem:/opt/fhem
+  fhem_ngrok:
+    image: wernight/ngrok
+    environment:
+      NGROK_PORT: "fhem:8083"
+      NGROK_BINDTLS: "true"
+      NGROK_REGION: "eu"
+      NGROK_AUTH: "${NGROK_AUTH}"
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    environment:
+      INFLUXDB_DB: 'fhem'
+      INFLUXDB_ADMIN_USER: 'fhemadmin'
+      INFLUXDB_ADMIN_USER_PASSWORD: 'fhemadmin'
+      INFLUXDB_USER: 'fhem'
+      INFLUXDB_USER_PASSWORD: 'fhem'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource'
+    links:
+      - influxdb
+    volumes:
+      - grafana_data:/var/lib/grafana
+  grafana_ngrok:
+    image: wernight/ngrok
+    environment:
+      NGROK_PORT: "grafana:3000"
+      NGROK_BINDTLS: "true"
+      NGROK_REGION: "ap"
+      NGROK_AUTH: "${NGROK_AUTH}"
+volumes:
+  influxdb_data:
+  grafana_data:
