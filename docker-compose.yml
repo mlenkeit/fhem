@@ -16,7 +16,6 @@ services:
       NGROK_AUTH: "${NGROK_AUTH}"
   influxdb:
     image: influxdb:latest
-    container_name: influxdb
     ports:
       - "8083:8083"
       - "8086:8086"
@@ -31,7 +30,6 @@ services:
       - influxdb_data:/var/lib/influxdb
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
     ports:
       - "3000:3000"
     environment:
