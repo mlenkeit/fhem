@@ -4,19 +4,22 @@ services:
     image: fhem/fhem:latest
     restart: always
     privileged: true
+    user: root
     ports:
       - "8082:8083"
     volumes:
-      - fhem_data:/opt/fhem
-  fhem_ngrok:
+      - ./fhem:/opt/fhem
+  ngrok:
     image: wernight/ngrok:${NGROK_DOCKER_IMAGE_TAG:-armhf}
+    user: root
+    command: /bin/sh -c "ngrok authtoken $NGROK_AUTH && ngrok start fhem grafana"
+    volumes:
+      - ./ngrok.yml:/root/.ngrok2/ngrok.yml
     environment:
-      NGROK_PORT: "fhem:8083"
-      NGROK_BINDTLS: "true"
-      NGROK_REGION: "eu"
       NGROK_AUTH: "${NGROK_AUTH}"
   influxdb:
     image: influxdb:latest
+    user: root
     ports:
       - "8083:8083"
       - "8086:8086"
@@ -31,6 +34,7 @@ services:
       - influxdb_data:/var/lib/influxdb
   grafana:
     image: grafana/grafana:latest
+    user: root
     ports:
       - "3000:3000"
     environment:
@@ -39,14 +43,6 @@ services:
       - influxdb
     volumes:
       - grafana_data:/var/lib/grafana
-  grafana_ngrok:
-    image: wernight/ngrok:${NGROK_DOCKER_IMAGE_TAG:-armhf}
-    environment:
-      NGROK_PORT: "grafana:3000"
-      NGROK_BINDTLS: "true"
-      NGROK_REGION: "ap"
-      NGROK_AUTH: "${NGROK_AUTH}"
 volumes:
   influxdb_data:
   grafana_data:
-  fhem_data:

@@ -1,0 +1,12 @@
+authtoken: XzF6PNYHkiWq43igsYDM_QskWE5G4VgiGTDpKumv9
+web_addr: 0.0.0.0:4040
+region: eu
+tunnels:
+  fhem:
+    proto: http
+    addr: fhem:8083
+    bind_tls: "true"
+  grafana:
+    proto: http
+    addr: grafana:3000
+    bind_tls: "true"
